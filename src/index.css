@@ -1,0 +1,157 @@
+@import "tailwindcss";
+
+@theme {
+  --color-background: #F5F5F0;
+  --color-foreground: #181818;
+  --color-muted: rgba(24,24,24,0.6);
+  --color-muted2: rgba(24,24,24,0.4);
+  --color-hairline: rgba(24,24,24,0.1);
+  --color-button: rgba(24,24,24,0.08);
+
+  --font-mono: "Fragment Mono", ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace;
+  --font-display: "Instrument Sans", "Fragment Mono", system-ui, sans-serif;
+}
+
+:root {
+  --ch: 7.5; /* JS computed char width px, 8px mobile */
+  --char: calc(var(--ch) * 1px);
+  --char2: calc(var(--char) * 2);
+  --line: calc(var(--ch) * 2px); /* ~15px desktop */
+  --font-size: calc(var(--ch) * 1.6px - 1px); /* adjusted for legibility */
+  --letter-spacing: calc(var(--ch) * 0.06px);
+  --line-height: calc(var(--ch) * 2px);
+  --cols: 96; /* computed */
+  
+  --strip-1: 12;
+  --strip-2: 24;
+  --strip-3: 36;
+  --strip-4: 48;
+  --strip-5: 60;
+  --strip-6: 72;
+  --strip-7: 84;
+  --strip-8: 96;
+  
+  --s1: calc(var(--strip-1) * var(--char));
+  --s2: calc(var(--strip-2) * var(--char));
+  --s3: calc(var(--strip-3) * var(--char));
+  --s4: calc(var(--strip-4) * var(--char));
+  --s5: calc(var(--strip-5) * var(--char));
+  --s6: calc(var(--strip-6) * var(--char));
+  --s7: calc(var(--strip-7) * var(--char));
+  --s8: calc(var(--strip-8) * var(--char));
+
+  --white: #F5F5F0;
+  --black: #181818;
+}
+
+html.dark {
+  --white: #181818;
+  --black: #F5F5F0;
+}
+
+body {
+  background-color: var(--white);
+  color: var(--black);
+  font-family: var(--font-mono);
+  font-variation-settings: 'MONO' 0.4, 'wght' 500;
+  letter-spacing: -0.01em;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  font-size: var(--font-size);
+  line-height: var(--line-height);
+  overflow-x: hidden;
+}
+
+.mega, .mega * {
+  font-family: var(--font-display) !important;
+  font-variation-settings: 'MONO' 0, 'wght' 700;
+  font-weight: 700;
+  text-transform: none;
+  font-feature-settings: 'ss05' 1;
+  letter-spacing: -0.03em;
+}
+
+/* Grid helpers */
+.section { display:flex; gap: var(--char2); padding-bottom: var(--line); }
+.section.between { justify-content: space-between; }
+.col { width: var(--s2); display:flex; flex-direction:column; position:relative; }
+.col.w1 { width: var(--s1); }
+.col.w2 { width: var(--s2); }
+.col.w3 { width: var(--s3); }
+.col.w4 { width: var(--s4); }
+.col.w5 { width: var(--s5); }
+.col.w6 { width: var(--s6); }
+.col.w7 { width: var(--s7); }
+.col.w8 { width: var(--s8); }
+
+/* ASCII / Pixel modes */
+html.textmode .image img, html.textmode .video video, 
+html.pixelmode .image img, html.pixelmode .video video { opacity: 0 !important; }
+
+.image canvas, .video canvas { position:absolute; inset:0; width:100%; height:100%; z-index:1; image-rendering: pixelated; white-space: pre; }
+.image .ascii, .video .ascii { position:absolute; inset:0; white-space: pre; z-index:2; display: flex; align-items: center; justify-content: center; font-size: 8px; line-height: 8px; pointer-events: none;}
+
+/* Image burn blend */
+.col.burn .image { mix-blend-mode: multiply; background: var(--white); }
+html.dark .col.burn .image { mix-blend-mode: screen; }
+
+/* Buttons */
+button, a.button:not(.ghost):not(.small) {
+  height: calc(var(--line) * 2);
+  padding: 1px calc(var(--char) * 1.5) 0;
+  background: rgba(24,24,24,0.08);
+  text-transform: uppercase;
+  letter-spacing: var(--letter-spacing);
+  font-size: var(--font-size);
+  border-radius: 4px;
+  display: inline-flex;
+  align-items: center;
+  font-variation-settings: 'MONO' 0.4,'wght' 500;
+  transition: background 120ms, color 120ms;
+}
+
+button:hover, a.button:hover:not(.ghost):not(.small) {
+  background: var(--black);
+  color: var(--white);
+}
+
+html.dark button, html.dark a.button:not(.ghost):not(.small) {
+  background: rgba(245,245,240,0.15);
+}
+
+html.dark button:hover, html.dark a.button:hover:not(.ghost):not(.small) {
+  background: var(--black);
+  color: var(--white);
+}
+
+/* Nav Links hover */
+#nav a {
+  transition: background 120ms, color 120ms;
+}
+#nav a:hover:not(.home) {
+  background: var(--black);
+  color: var(--white);
+}
+
+/* Animations */
+@keyframes blinker {
+  50% { opacity: 0; }
+}
+.active-nav {
+  animation: blinker 0.16s linear infinite;
+}
+
+/* Grid debugger overlay */
+html.grid .section { outline:1px dashed rgba(128,128,128,.3); }
+
+/* Responsive adjustments */
+@media (max-width: 1023px) {
+  :root {
+    --font-size: calc(var(--ch) * 1.5px);
+  }
+}
+
+@media (max-width: 768px) {
+  .section { flex-direction: column; gap: var(--line); }
+  .col { width: 100% !important; }
+}
